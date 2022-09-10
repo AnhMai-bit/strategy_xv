@@ -1,0 +1,79 @@
+import csv
+# Variables, lack race length
+solar_constant = 1400 # W/m2
+interval = 10 # min
+area_of_array = 5 # m2
+
+for i in range(1000):
+    total_interval = interval*i
+    
+class SolarDay:
+
+    def __init__(self, day, latitude, longitude,
+                 timezone, cloudiness, module_angle):
+        self.day = day
+        self.lat = latitude
+        self.long = longitude
+        # Cloudiness is the percentage of solar insolation
+        # Not being blocked by clouds (i.e. between 0 and 1)
+        self.cloud = cloudiness
+        # Given as an integer of the difference between us and UTC
+        self.points = []
+        self.time = timezone
+        # the module angle is the panel angle wrt the horizontal plane.
+        # 0 degrees/rad faces North (front of car)
+        self.mod_angle = module_angle
+
+    def declination_angle(self):
+        # Declination angle is the angle the sun sits in the sky at noon
+        d = -23.45 * cos(to_rad(360 / 365) * (self.day + 10))
+        return d
+        
+        # An array of the energy captured by the car 
+
+class SolarArray:
+    def data(self):
+        array = []
+        with open(filename, mode='r') as infile:
+            reader = csv.reader(infile)
+            for row in reader:
+                cell = {"Cell_ID": row[0], "Angle": row[4]}
+                array.append(cell)
+        # print(array)
+        return(array)
+
+def declination_angle(self):
+        # Declination angle is the angle the sun sits in the sky at noon
+        d = -23.45 * cos(to_rad(360 / 365) * (self.day + 10))
+        return d
+
+def solar_insolation(self, HRA):
+        # gives value in kW/m^2
+        ID = 1.353 * 0.7 ** (self.AM(HRA) ** 0.678)  # Incident radiation
+        elevation = to_rad(90 - self.lat + self.declination_angle())
+        IM = ID * sin(to_rad(self.mod_angle) + elevation)
+        return IM
+
+def energy_received(self):
+    points = linspace(1000, endpoint=False).tolist()
+    energy = []
+        
+    for i in range(len(points)):
+        energy.append(self.solar_insolation(total_interval))
+                      
+    return(energy, points)
+
+    
+# Converted by the solar array for every interval of time given
+                          
+def totalEnergy(self):
+        total_energy = 0
+        array = self.data()
+        for i in range(1, len(self.data())):
+            module_angle = float(array[i]['Angle'])
+            d = SolarDay(self.day, self.lat, self.long, module_angle)
+            insol = integrate(d.energy_received()[1], d.energy_received()[0])
+            energy = insol * 5 * 0.17
+            total_energy = total_energy + energy
+
+        return(total_energy)
